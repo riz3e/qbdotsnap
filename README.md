@@ -2,7 +2,7 @@
 
 Snapshot and diff your dotfiles. Built for Arch/Hyprland users who break things.
 
-mostly focused for Hyprland.
+mostly focused on Hyprland.
 
 ## Install
 

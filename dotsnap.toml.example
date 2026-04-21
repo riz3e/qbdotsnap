@@ -1,0 +1,29 @@
+# ~/.qbdotsnap.toml
+# Files and directories qbdotsnap will track.
+# Both individual files and whole directories are supported.
+
+track = [
+  "~/.zshrc",
+  "~/.bashrc",
+  "~/.gitconfig",
+  "~/.config/hypr",           # whole dir — catches hyprland.conf, binds.conf, etc.
+  "~/.config/nvim",
+  "~/.config/waybar",
+  "~/.config/kitty",
+  "~/.config/wofi",
+  "~/.config/quickshell"
+]
+
+# Patterns to skip inside tracked directories.
+# Supports exact filenames and *.ext wildcards.
+skip_patterns = [
+  "*.log",
+  "*.sock",
+  "*.pid",
+  ".cache",
+  "hyprland.log",
+  "hyprpaper.log",
+]
+
+# Optional: custom snapshot location (defaults to ~/.qbdotsnap)
+# snapshot_dir = "~/backups/qbdotsnap"

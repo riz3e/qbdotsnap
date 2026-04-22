@@ -1,12 +1,12 @@
 use crate::config::{expand_tilde, Config};
-use crate::snapshot::{load_manifest_by_id, snap_path_for};
+use crate::snapshot::{load_manifest_by_selector, snap_path_for};
 use anyhow::Result;
 use similar::{ChangeTag, TextDiff};
 use std::collections::{HashMap, HashSet};
 
 pub fn run(cfg: &Config, from_id: &str, to_id: &str, file_filter: Option<&str>) -> Result<()> {
-    let from = load_manifest_by_id(cfg, from_id)?;
-    let to = load_manifest_by_id(cfg, to_id)?;
+    let from = load_manifest_by_selector(cfg, from_id)?;
+    let to = load_manifest_by_selector(cfg, to_id)?;
 
     println!("Diff: {} → {}", from.id, to.id);
 

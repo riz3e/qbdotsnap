@@ -1,10 +1,10 @@
 use crate::config::Config;
-use crate::snapshot::load_manifest_by_id;
+use crate::snapshot::load_manifest_by_selector;
 use anyhow::Result;
 use std::collections::HashMap;
 
 pub fn run(cfg: &Config, id: &str) -> Result<()> {
-    let manifest = load_manifest_by_id(cfg, id)?;
+    let manifest = load_manifest_by_selector(cfg, id)?;
     let snap_dir = cfg.snapshot_dir();
 
     println!("╔══════════════════════════════════════════════════╗");

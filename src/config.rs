@@ -50,12 +50,19 @@ pub fn load() -> Result<Config> {
                 "~/.bashrc".into(),
                 "~/.gitconfig".into(),
                 "~/.config/hypr".into(),
+                "~/.config/quickshell".into(),
+                "~/.config/ags".into(),          // end4/dots-hyprland uses AGS
+                "~/.config/nvim".into(),
+                "~/.config/wofi".into(),
+                "~/.config/gtk-3.0".into(),
             ],
             skip_patterns: vec![
                 "*.log".into(),
                 "*.sock".into(),
+                "*.pid".into(),
                 ".cache".into(),
                 "hyprland.log".into(),
+                "hyprpaper.log".into(),
             ],
             snapshot_dir: None,
         };

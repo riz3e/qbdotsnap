@@ -60,7 +60,7 @@ skip_patterns = [
 
 ## Snapshot layout
 
-```
+```zsh
 ~/.qbdotsnap/
   2025-04-21T14:32:00/
     manifest.json

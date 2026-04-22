@@ -1,0 +1,17 @@
+[Unit]
+Description=qbdotsnap — automatic dotfile snapshots
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.cargo/bin/qbdotsnap watch
+Restart=on-failure
+RestartSec=5s
+
+# Journal logging — view with: journalctl --user -u qbdotsnap -f
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical-session.target

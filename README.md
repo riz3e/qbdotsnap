@@ -12,7 +12,7 @@ cd qbdotsnap
 cargo install --path .
 ```
 
-This puts the `qbdotsnap` binary in `~/.cargo/bin/`. Make sure that's in your PATH — add this to your `~/.zshrc` if it isn't already:
+Make sure `~/.cargo/bin` is in your PATH:
 
 ```zsh
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -30,7 +30,9 @@ On first run it creates `~/.qbdotsnap.toml` with sensible defaults for an Arch/H
 
 ## Edit the config to add your paths
 
+```bash
 vim ~/.qbdotsnap.toml  
+```
 
 ## Usage
 
@@ -39,21 +41,42 @@ vim ~/.qbdotsnap.toml
 qbdotsnap take
 qbdotsnap take --label "before hyprland update"
 
-# List all snapshots
+# List snapshots
 qbdotsnap list
 
-# Diff the last two snapshots
+# Diff last two snapshots
 qbdotsnap diff
 
-# Diff specific snapshots by timestamp
-qbdotsnap diff 2025-04-20T10:00:00 2025-04-21T14:32:00
+# Diff and filter to one file
+qbdotsnap diff --file ~/.config/hypr/hyprland.conf
 
-# Export a human-readable summary of your setup
+# Diff specific snapshots
+qbdotsnap diff 2025-04-20T10:00:00 2025-04-21T14:32:00 --file ~/.zshrc
+
+# Export a summary of your setup
 qbdotsnap export
 
-# Restore — always dry-run first!
+# Restore (dry run first!)
 qbdotsnap restore --dry-run 2025-04-20T10:00:00
 qbdotsnap restore 2025-04-20T10:00:00
+
+# Watch for changes and auto-snapshot
+qbdotsnap watch
+qbdotsnap watch --debounce 600   # wait 10min after last change
+```
+
+## Auto-snapshot with systemd
+
+```bash
+# Install the service
+mkdir -p ~/.config/systemd/user
+cp systemd/qbdotsnap.service ~/.config/systemd/user/
+
+# Enable and start
+systemctl --user enable --now qbdotsnap
+
+# Check logs
+journalctl --user -u qbdotsnap -f
 ```
 
 ## Config (~/.qbdotsnap.toml)
@@ -62,9 +85,9 @@ qbdotsnap restore 2025-04-20T10:00:00
 track = [
   "~/.zshrc",
   "~/.gitconfig",
-  "~/.config/hypr",         # whole directory, tracked recursively
-  "~/.config/quickshell",   # quickshell bar
-  "~/.config/ags",          # end4/dots-hyprland AGS widgets
+  "~/.config/hypr",
+  "~/.config/quickshell",
+  "~/.config/ags",
   "~/.config/nvim",
 ]
 
@@ -78,18 +101,6 @@ skip_patterns = [
 ## Uninstall
 
 ```bash
+systemctl --user disable --now qbdotsnap  # if using systemd
 cargo uninstall qbdotsnap
-```
-
-## Snapshot layout
-
-```zsh
-~/.qbdotsnap/
-  2025-04-21T14:32:00/
-    manifest.json
-    home/user/.zshrc
-    home/user/.gitconfig
-    home/user/.config/hypr/hyprland.conf
-    home/user/.config/hypr/binds.conf
-    home/user/.config/quickshell/shell.qml
 ```

@@ -2,6 +2,7 @@ mod config;
 mod snapshot;
 mod diff;
 mod export;
+mod watch;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -18,34 +19,39 @@ struct Cli {
 enum Commands {
     /// Take a new snapshot of all tracked files
     Take {
-        /// Optional label for this snapshot
         #[arg(short, long)]
         label: Option<String>,
     },
-    /// List all snapshots
+    /// List snapshots
     List,
     /// Diff two snapshots (defaults to last two)
     Diff {
         /// First snapshot timestamp (or 'last', 'prev')
         #[arg(default_value = "prev")]
         from: String,
-        /// Second snapshot timestamp (defaults to latest)
+        /// Second snapshot (defaults to latest)
         #[arg(default_value = "last")]
         to: String,
+        /// Only show diff for a specific file path (e.g. ~/.config/hypr/hyprland.conf)
+        #[arg(short, long, value_name = "PATH")]
+        file: Option<String>,
     },
     /// Export a human-readable summary of your current config
     Export {
-        /// Snapshot to export (defaults to latest)
         #[arg(default_value = "last")]
         snapshot: String,
     },
     /// Restore files from a snapshot
     Restore {
-        /// Snapshot timestamp to restore from
         snapshot: String,
-        /// Dry run — show what would be restored without doing it
         #[arg(short, long)]
         dry_run: bool,
+    },
+    /// Watch tracked paths and auto-snapshot on changes
+    Watch {
+        /// Seconds to wait after last change before snapshotting (default: 600)
+        #[arg(short, long, default_value = "600")]
+        debounce: u64,
     },
 }
 
@@ -76,14 +82,17 @@ fn main() -> Result<()> {
                 }
             }
         }
-        Commands::Diff { from, to } => {
-            diff::run(&cfg, &from, &to)?;
+        Commands::Diff { from, to, file } => {
+            diff::run(&cfg, &from, &to, file.as_deref())?;
         }
         Commands::Export { snapshot } => {
             export::run(&cfg, &snapshot)?;
         }
         Commands::Restore { snapshot, dry_run } => {
             snapshot::restore(&cfg, &snapshot, dry_run)?;
+        }
+        Commands::Watch { debounce } => {
+            watch::run(&cfg, debounce)?;
         }
     }
 

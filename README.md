@@ -12,16 +12,31 @@ cd qbdotsnap
 cargo install --path .
 ```
 
-## Quick start
+This puts the `qbdotsnap` binary in `~/.cargo/bin/`. Make sure that's in your PATH — add this to your `~/.zshrc` if it isn't already:
+
+```zsh
+export PATH="$HOME/.cargo/bin:$PATH"
+```
+
+Then reload: `source ~/.zshrc`
+
+## First run
 
 ```bash
-# First run creates ~/.qbdotsnap.toml with sensible defaults
 qbdotsnap take
+```
 
-# Edit the config to add your paths
-nano ~/.qbdotsnap.toml
+On first run it creates `~/.qbdotsnap.toml` with sensible defaults for an Arch/Hyprland setup. Edit it to match your actual paths, then take another snapshot.
 
-# Take another snapshot with a label
+## Edit the config to add your paths
+
+vim ~/.qbdotsnap.toml  
+
+## Usage
+
+```bash
+# Take a snapshot (optionally with a label)
+qbdotsnap take
 qbdotsnap take --label "before hyprland update"
 
 # List all snapshots
@@ -30,24 +45,26 @@ qbdotsnap list
 # Diff the last two snapshots
 qbdotsnap diff
 
-# Diff specific snapshots
+# Diff specific snapshots by timestamp
 qbdotsnap diff 2025-04-20T10:00:00 2025-04-21T14:32:00
 
-# Export a summary of the latest snapshot
+# Export a human-readable summary of your setup
 qbdotsnap export
 
-# Restore from a snapshot (dry run first!)
+# Restore — always dry-run first!
 qbdotsnap restore --dry-run 2025-04-20T10:00:00
 qbdotsnap restore 2025-04-20T10:00:00
 ```
 
-## Config (`~/.qbdotsnap.toml`)
+## Config (~/.qbdotsnap.toml)
 
 ```toml
 track = [
   "~/.zshrc",
   "~/.gitconfig",
-  "~/.config/hypr",
+  "~/.config/hypr",         # whole directory, tracked recursively
+  "~/.config/quickshell",   # quickshell bar
+  "~/.config/ags",          # end4/dots-hyprland AGS widgets
   "~/.config/nvim",
 ]
 
@@ -56,6 +73,12 @@ skip_patterns = [
   "*.sock",
   "hyprland.log",
 ]
+```
+
+## Uninstall
+
+```bash
+cargo uninstall qbdotsnap
 ```
 
 ## Snapshot layout
@@ -68,4 +91,5 @@ skip_patterns = [
     home/user/.gitconfig
     home/user/.config/hypr/hyprland.conf
     home/user/.config/hypr/binds.conf
+    home/user/.config/quickshell/shell.qml
 ```

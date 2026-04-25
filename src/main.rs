@@ -58,7 +58,7 @@ enum Commands {
     },
     /// Watch tracked paths and auto-snapshot on changes
     Watch {
-        #[arg(short, long, default_value = "5")]
+        #[arg(short, long, default_value = "300")]
         debounce: u64,
     },
     /// Enable or disable desktop notifications
